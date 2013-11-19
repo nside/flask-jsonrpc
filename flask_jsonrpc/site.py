@@ -223,15 +223,6 @@ class JSONRPCSite(object):
             if version in ('1.1', '2.0') and 'result' in response:
                 response.pop('result')
             status = e.status
-        except Exception, e:
-            # exception missed by others
-            #got_request_exception.connect(log_exception, current_app._get_current_object())
-
-            other_error = OtherError(e)
-            response['error'] = other_error.json_rpc_format
-            status = other_error.status
-            if version in ('1.1', '2.0') and 'result' in response:
-                response.pop('result')
 
         # Exactly one of result or error MUST be specified. It's not
         # allowed to specify both or none.
@@ -275,15 +266,6 @@ class JSONRPCSite(object):
 
             response['error'] = e.json_rpc_format
             status = e.status
-        except Exception, e:
-            # exception missed by others
-            #got_request_exception.connect(log_exception, current_app._get_current_object())            
-
-            other_error = OtherError(e)
-
-            response['result'] = None
-            response['error'] = other_error.json_rpc_format
-            status = other_error.status
         
         # extract id the request
         json_request_id = self.extract_id_request(raw_data)
